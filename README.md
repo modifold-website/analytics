@@ -20,14 +20,18 @@ mvn clean package
 
 Output JAR will be in `target/`.
 
-## Quick Integration
+## Installation In Your Mod
 
-Use it in your plugin setup:
+1. Add the class file to your mod source tree:
+   - copy `src/main/java/com/modifold/ModifoldAnalytics.java` into your mod project
+   - adjust the `package` line if your project uses a different package structure
+2. Ensure Gson is available in your mod runtime/build.
+3. Initialize analytics during your mod/plugin startup (setup/init phase):
 
 ```java
-new ModifoldAnalytics("optimized-somehow", "1.0.0");
+new ModifoldAnalytics("your-project-slug", "1.0.0");
 ```
 
-Where:
-- `optimized-somehow` is your `projectSlug`
-- `1.0.0` is your plugin version
+4. Replace placeholders:
+   - `your-project-slug` -> your Modifold project slug
+   - `1.0.0` -> your current mod version
