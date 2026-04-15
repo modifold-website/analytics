@@ -1,0 +1,20 @@
+{
+    "Group": "Modifold",
+    "Name": "ModifoldAnalyticsExamplePlugin",
+    "Version": "1.0.0",
+    "Description": "Plugin made to test ModifoldAnalytics integration.",
+    "Authors": [
+        {
+            "Name": "Modifold"
+        }
+    ],
+    "Website": "https://modifold.com/",
+    "ServerVersion": "*",
+    "Dependencies": {
+        "Hytale:AccessControlModule": "*"
+    },
+    "OptionalDependencies": {},
+    "DisabledByDefault": false,
+    "Main": "com.modifold.Main",
+    "IncludesAssetPack": true
+}
