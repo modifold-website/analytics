@@ -16,7 +16,6 @@
 package com.modifold;
 
 import com.google.gson.Gson;
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.Universe;
 
 import java.io.IOException;
@@ -30,9 +29,12 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-public class ModifoldAnalytics {
+public class ModifoldAnalytics implements AutoCloseable {
     private final String URL_BASE = "https://staging-api.modifold.com/analytics/";
     private final boolean DEBUG = false; // This is for development purposes only
     private static final Gson GSON = new Gson();
@@ -40,6 +42,7 @@ public class ModifoldAnalytics {
     private final String projectSlug;
     private final String modVersion;
     private final String serverUUID;
+    private final ScheduledExecutorService scheduler;
 
     /**
     * Initializes ModifoldAnalytics for your mod.
@@ -50,17 +53,19 @@ public class ModifoldAnalytics {
     public ModifoldAnalytics(String projectSlug, String modVersion) {
         this.projectSlug = projectSlug;
         this.modVersion = modVersion;
+        this.scheduler = createScheduler();
 
         // Get or create the server UUID
         this.serverUUID = getServerUUID();
         if(this.serverUUID == null) {
             System.out.println("[ModifoldAnalytics] Metrics are disabled on this server.");
+            this.scheduler.shutdown();
             return; // Metrics disabled by server owner
         }
 
-        logMetrics();
-        addModToServer();
-        HytaleServer.SCHEDULED_EXECUTOR.scheduleAtFixedRate(this::logMetrics, 2, 2, TimeUnit.MINUTES);
+        // Avoid blocking plugin startup: all network calls run on dedicated scheduler thread.
+        this.scheduler.execute(this::addModToServer);
+        this.scheduler.scheduleAtFixedRate(this::logMetrics, 2, 2, TimeUnit.MINUTES);
     }
 
     public ModifoldAnalytics(String projectSlug) {
@@ -130,6 +135,8 @@ public class ModifoldAnalytics {
             http.setRequestMethod("POST");
             http.setDoOutput(true);
             http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            http.setConnectTimeout(15_000);
+            http.setReadTimeout(15_000);
 
             String jsonBody = GSON.toJson(arguments);
             byte[] out = jsonBody.getBytes(StandardCharsets.UTF_8);
@@ -151,6 +158,21 @@ public class ModifoldAnalytics {
         } catch (Exception e) {
             // pass
         }
+    }
+
+    private ScheduledExecutorService createScheduler() {
+        ThreadFactory threadFactory = runnable -> {
+            Thread thread = new Thread(runnable, "modifold-analytics-scheduler");
+            thread.setDaemon(true);
+            return thread;
+        };
+
+        return Executors.newSingleThreadScheduledExecutor(threadFactory);
+    }
+
+    @Override
+    public void close() {
+        this.scheduler.shutdown();
     }
 
     private int getOnlinePlayerCount() {

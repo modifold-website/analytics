@@ -6,6 +6,8 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import javax.annotation.Nonnull;
 
 public class Main extends JavaPlugin {
+    private ModifoldAnalytics modifoldAnalytics;
+
     public Main(@Nonnull JavaPluginInit init) {
         super(init);
     }
@@ -13,11 +15,15 @@ public class Main extends JavaPlugin {
     @Override
     protected void setup() {
         super.setup();
-        new ModifoldAnalytics("optimized-somehow", "1.0.0");
+        this.modifoldAnalytics = new ModifoldAnalytics("optimized-somehow", "1.0.0");
     }
 
     @Override
     protected void shutdown() {
+        if(this.modifoldAnalytics != null) {
+            this.modifoldAnalytics.close();
+        }
+        
         super.shutdown();
     }
 }
