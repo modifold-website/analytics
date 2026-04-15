@@ -6,7 +6,6 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import javax.annotation.Nonnull;
 
 public class Main extends JavaPlugin {
-
     public Main(@Nonnull JavaPluginInit init) {
         super(init);
     }
