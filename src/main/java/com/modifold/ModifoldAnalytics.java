@@ -35,7 +35,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 public class ModifoldAnalytics implements AutoCloseable {
-    private final String URL_BASE = "https://staging-api.modifold.com/analytics/";
+    private final String URL_BASE = "https://api.modifold.com/analytics/";
     private final boolean DEBUG = false; // This is for development purposes only
     private static final Gson GSON = new Gson();
 
