@@ -41,15 +41,15 @@ new ModifoldAnalytics("your-project-slug", "1.0.0");
 You can add a Markdown image with your online graph to the project page:
 
 ```md
-![](https://staging-api.modifold.com/analytics/optimized-somehow/embed)
+![](https://api.modifold.com/analytics/optimized-somehow/embed)
 ```
 
 You can enable dark theme by adding `?theme=dark`:
 
 ```md
-![](https://staging-api.modifold.com/analytics/optimized-somehow/embed?theme=dark)
+![](https://api.modifold.com/analytics/optimized-somehow/embed?theme=dark)
 ```
 
 Here `optimized-somehow` is your project slug.
 
-![](https://staging-api.modifold.com/analytics/optimized-somehow/embed)
+![](https://api.modifold.com/analytics/optimized-somehow/embed)
