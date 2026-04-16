@@ -35,3 +35,15 @@ new ModifoldAnalytics("your-project-slug", "1.0.0");
 4. Replace placeholders:
    - `your-project-slug` -> your Modifold project slug
    - `1.0.0` -> your current mod version
+
+## Optional Markdown Embed
+
+You can add a Markdown image with your online graph to the project page:
+
+```md
+![](https://staging-api.modifold.com/analytics/optimized-somehow/embed)
+```
+
+Here `optimized-somehow` is your project slug.
+
+![](https://staging-api.modifold.com/analytics/optimized-somehow/embed)
